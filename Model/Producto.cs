@@ -12,6 +12,8 @@ public class Producto
     public string Descripcion { get; set; } = string.Empty;
     [Range(0.01, double.MaxValue, ErrorMessage = "El precio debe ser mayor que cero")]
     public double Precio { get; set; }
+    [Range(0.01, double.MaxValue, ErrorMessage = "El Costo debe ser mayor que cero")]
+    public double Costo { get; set; }
     [Range(0, int.MaxValue, ErrorMessage = "La existencia no puede ser menor que cero")]
     public int Existencia { get; set; }
 

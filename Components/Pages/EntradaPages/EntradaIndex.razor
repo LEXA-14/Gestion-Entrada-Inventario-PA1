@@ -1,0 +1,160 @@
+﻿@page "/Inventario/Index"
+@using Gestion_Entrada_Inventario_PA1.Model
+@using Gestion_Entrada_Inventario_PA1.Servicess
+
+@inject EntradaProductoServices pedidoService
+@rendermode InteractiveServer
+
+<PageTitle>Registro Index</PageTitle>
+
+<div class="container">
+    <div class="card shadow-lg">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="card-title"></div>
+            <h5 class="card-title">Index </h5>
+            <a href="/Pedido/Createt" class="btn btn-primary"><span class="bi bi-plus-square"></span>Crear</a>
+        </div>
+
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-3">
+                    <label><strong>Desde</strong></label>
+                    <InputDate class="form-control" @bind-Value=desde></InputDate>
+                </div>
+
+                <div class="col-3">
+                    <label><strong>Hasta</strong></label>
+                    <InputDate class="form-control" @bind-Value=hasta></InputDate>
+                </div>
+            </div>
+
+            <div class="row align-items-center">
+                <div class="col-3">
+                    <label class="col-form-label"><strong>Filtrar por</strong></label>
+                    <InputSelect class="form-select" @bind-Value="Filtro">
+                        <option value="" selected disabled>Selecciona una opci&oacute;n</option>
+                        <option value="ID">ID</option>
+                        <option value="Persona">Nombre</option>
+
+
+                    </InputSelect>
+
+                </div>
+                <div class="col-4 offset-5">
+                    <label class="col-form-label"><strong>B&uacute;squeda</strong></label>
+                    <div class="input-group">
+                        <input class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
+                        <button type="button" class="btn btn-outline-primary bi bi-search" @onclick=Buscar></button>
+                    </div>
+
+
+                </div>
+                <table class="table table-hover">
+                    <thead class="table table-striped text-black">
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Nombre</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>Total</th>
+                            <th>Opciones</th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var entrada in ListaEntrada)
+                        {
+                            <tr>
+                                <td>@entrada.EntradaId</td>
+                                <th>@entrada.Fecha</th>
+                                <td>@entrada.NombreCliente</td>
+
+                                <th> @entrada.detalle.Sum(d => d.Cantidad)</th>
+                                <th>@entrada.detalle.Average(p => p.Precio)</th>
+                                <th>@entrada.detalle.Sum(i => i.Cantidad * i.Precio)</th>
+
+
+
+
+                                <td class="text-center">
+                                    <a href="/Pedido/Edit/@entrada.EntradaId" class="btn btn-outline-primary bi bi-pencil-square"></a>
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <label>Conteo:@ListaEntrada.Count()</label>
+                <label>Total:@ListaEntrada.Sum(p => p.Cantidad*p.Precio)</label>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+    public Entrada entrada { get; set; }
+
+    public List<Entrada> ListaEntrada { get; set; } = new List<Entrada>();
+
+    public string Filtro { get; set; }
+    public string ValorFiltro { get; set; }
+
+    public DateTime? desde { get; set; } = null;
+    public DateTime? hasta { get; set; } = null;
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaEntrada = await pedidoService.GetLista(l => true);
+    }
+
+    public async Task Buscar()
+    {
+        var prelista = await pedidoService.GetLista(l => true);
+
+        if (desde.HasValue && hasta.HasValue)
+        {
+            prelista = prelista.Where(p => p.Fecha >= desde && p.Fecha <= hasta).ToList();
+        }
+
+        if (desde.HasValue && hasta == null)
+        {
+            prelista = prelista.Where(p => p.Fecha <= hasta).ToList();
+        }
+
+
+        if (hasta.HasValue && desde == null)
+        {
+            prelista = prelista.Where(p => p.Fecha <= hasta).ToList();
+        }
+
+        if (!string.IsNullOrWhiteSpace(ValorFiltro))
+        {
+            if (Filtro == "ID" && int.TryParse(ValorFiltro, out int id))
+            {
+
+                prelista = prelista.Where(p => p.EntradaId == id).ToList();
+            }
+
+            if (Filtro == "Persona")
+            {
+                prelista = prelista.Where(p => p.NombreCliente.ToLower().Contains(ValorFiltro.ToLower())).ToList();
+            }
+        }
+        ListaEntrada = prelista;
+    }
+
+}
