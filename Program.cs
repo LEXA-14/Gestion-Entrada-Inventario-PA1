@@ -38,6 +38,7 @@ public class Program
     options.UseSqlServer(connectionString));
 
         builder.Services.AddScoped<EntradaProductoServices>();
+        builder.Services.AddScoped<ProductoServices>();
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
         builder.Services.AddIdentityCore<ApplicationUser>(options =>

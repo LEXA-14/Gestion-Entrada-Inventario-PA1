@@ -1,0 +1,118 @@
+﻿@page "/Producto/Create"
+@page "/Producto/Edit/{id:int}"
+
+@inject ProductoServices productoService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>@(Id == 0 ? "Nuevo Producto" : "Editar Producto")</PageTitle>
+
+
+<EditForm Model="producto" OnValidSubmit="Guardar">
+    @if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-danger" role="alert">
+        @mensaje
+    </div>
+}
+    <DataAnnotationsValidator/>
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header text-center">
+                <h5 class="card-title">Crear Producto</h5>
+            </div>
+            <div class="card-body">
+
+                
+                <div class="mb-3">
+                    <label class="form-label"><strong>Producto ID</strong></label>
+                    <InputNumber class="form-control" @bind-Value="producto.ProductoId" readonly></InputNumber>
+                </div>
+                
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Descripcion</strong></label>
+                    <InputText class="form-control" @bind-Value="producto.Descripcion"></InputText>
+                    <ValidationMessage For="()=>producto.Descripcion"/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label"><strong>Costo</strong></label>
+                    <InputNumber class="form-control" @bind-Value="producto.Costo"></InputNumber>
+                    <ValidationMessage For="() => producto.Costo" />
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label"><strong>Precio</strong></label>
+                    <InputNumber class="form-control" @bind-Value="producto.Precio"></InputNumber>
+                    <ValidationMessage For="()=>producto.Precio"/>
+                </div>
+
+            </div>
+            
+            <div class="card-footer text-center mt-2">
+                <a href="/Inventario/Index" class="btn btn-secondary"><span class="bi bi-arrow-left"></span>Volver</a>
+                <button type="submit" class="btn btn-primary bi bi-floppy">Guardar</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Producto producto = new Producto();
+    private string mensaje = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id > 0)
+        {
+            var encontrado = await productoService.Buscar(Id);
+            if (encontrado != null)
+            {
+                producto = encontrado;
+            }
+            else
+            {
+                Navigation.NavigateTo("/Inventario/Index");
+            }
+        }
+    }
+
+    private async Task Guardar()
+    {
+        Console.WriteLine($"ID: {producto.ProductoId}");
+        Console.WriteLine($"Descripcion: {producto.Descripcion}");
+        Console.WriteLine($"Precio: {producto.Precio}");
+        try
+        {
+            if (producto.Costo> producto.Precio)
+            {
+                mensaje = "Precio no puede ser menor que Costo";
+                return;
+            }
+
+            if (producto.Precio <= 0)
+            {
+                mensaje = "Precio no puede ser menor o igual a 0";
+                return;
+            }
+
+            bool resultado = await productoService.Guardar(producto);
+            if (resultado)
+            {
+                Navigation.NavigateTo("/Inventario/Index");
+            }
+            else
+            {
+                mensaje = "No se pudo guardar los cambios en la base de datos.";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Ocurrió un error inesperado: {ex.Message}";
+        }
+    }
+}
