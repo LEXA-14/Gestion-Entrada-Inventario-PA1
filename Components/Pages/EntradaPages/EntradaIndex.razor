@@ -1,8 +1,5 @@
 ﻿@page "/Inventario/Index"
-@using Gestion_Entrada_Inventario_PA1.Model
-@using Gestion_Entrada_Inventario_PA1.Servicess
-
-@inject EntradaProductoServices pedidoService
+@inject EntradaProductoServices entradaService
 @rendermode InteractiveServer
 <PageTitle>Registro Index</PageTitle>
 <div class="container">
@@ -88,7 +85,7 @@
 
 
                                 <td class="text-center">
-                                    <a href="/Pedido/Edit/@entrada.EntradaId" class="btn btn-outline-primary bi bi-pencil-square"></a>
+                                    <a href="/Inventario/Edit/@entrada.EntradaId" class="btn btn-outline-primary bi bi-pencil-square"></a>
                                 </td>
 
                             </tr>
@@ -124,12 +121,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ListaEntrada = await pedidoService.GetLista(l => true);
+        ListaEntrada = await entradaService.GetLista(l => true);
     }
 
     public async Task Buscar()
     {
-        var prelista = await pedidoService.GetLista(l => true);
+        var prelista = await entradaService.GetLista(l => true);
 
         if (desde.HasValue && hasta.HasValue)
         {

@@ -6,7 +6,7 @@ namespace Gestion_Entrada_Inventario_PA1.Model;
 public class Producto
     {
     [Key]
-    public int Productoid { get; set; }
+    public int ProductoId { get; set; }
 
     [Required(ErrorMessage = "Este campo no puede estar vacio")]
     public string Descripcion { get; set; } = string.Empty;
@@ -16,6 +16,8 @@ public class Producto
     public double Costo { get; set; }
     [Range(0, int.MaxValue, ErrorMessage = "La existencia no puede ser menor que cero")]
     public int Existencia { get; set; }
+
+    public DateTime Fecha { get; set; }= DateTime.Now;
 
     [InverseProperty("Producto")]
     public ICollection<EntradaDetalle> detalle { get; set; }

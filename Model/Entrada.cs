@@ -19,8 +19,10 @@ public class Entrada
     public int Cantidad { get; set; }
     public decimal Precio { get; set; }
 
+    public decimal Total {  get; set; }
+
     [InverseProperty("Entrada")]
-    public ICollection<EntradaDetalle> detalle { get; set; }
+    public ICollection<EntradaDetalle> detalle { get; set; }=new List<EntradaDetalle>();
 
 }
 

@@ -26,7 +26,7 @@ public class EntradaProductoServices(IDbContextFactory<Contexto> dbFactory)
 
         foreach (var item in detalle)
         {
-            var producto = await contexto.Producto.SingleOrDefaultAsync(c => c.Productoid == item.ProductoId);
+            var producto = await contexto.Producto.SingleOrDefaultAsync(c => c.ProductoId == item.ProductoId);
 
             if (producto != null)
             {
@@ -55,7 +55,7 @@ public class EntradaProductoServices(IDbContextFactory<Contexto> dbFactory)
 
         await AfectarEntrada(entradaOriginal.detalle.ToArray(), TipoOperacion.Suma);
 
-        var detalleAnterior = await contexto.EntradaDetalle.Where(d => d.EntradaId == entrada.EntradaId).ToListAsync();
+        var detalleAnterior = await contexto.EntradaDetalle.Where(d => d.entradaId == entrada.EntradaId).ToListAsync();
 
         contexto.EntradaDetalle.RemoveRange(detalleAnterior);
 

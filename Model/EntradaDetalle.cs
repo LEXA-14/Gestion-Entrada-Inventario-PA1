@@ -9,13 +9,13 @@ public class EntradaDetalle
     public int DetalleId { get; set; }
 
     [Required(ErrorMessage = "Este campo no puede estar vacio")]
-    public int EntradaId { get; set; }
+    public int entradaId { get; set; }
     [Required(ErrorMessage = "Este campo no puede estar vacio")]
     public int ProductoId { get; set; }
     [Range(0, int.MaxValue, ErrorMessage = "La Cantidad no puede ser negativa")]
     public int Cantidad { get; set; }
     [Range(0, int.MaxValue, ErrorMessage = "El Precio no puede ser negativo")]
-    public double Precio { get; set; }
+    public decimal Precio { get; set; }
 
     [ForeignKey("Entrada")]
     public virtual Entrada entrada{ get; set; }
