@@ -75,7 +75,7 @@
                             <tr>
                                 <td>@entrada.EntradaId</td>
                                 <th>@entrada.Fecha</th>
-                                <td>@entrada.NombreCliente</td>
+                                <td>@entrada.Concepto</td>
 
                                 <th> @entrada.detalle.Sum(d => d.Cantidad)</th>
                                 <th>@entrada.detalle.Average(p => p.Precio)</th>
@@ -154,7 +154,7 @@
 
             if (Filtro == "Persona")
             {
-                prelista = prelista.Where(p => p.NombreCliente.ToLower().Contains(ValorFiltro.ToLower())).ToList();
+                prelista = prelista.Where(p => p.Concepto.ToLower().Contains(ValorFiltro.ToLower())).ToList();
             }
         }
         ListaEntrada = prelista;
