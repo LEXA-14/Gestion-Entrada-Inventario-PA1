@@ -15,12 +15,8 @@ public class EntradaDetalle
     [Range(0, int.MaxValue, ErrorMessage = "La Cantidad no puede ser negativa")]
     public int Cantidad { get; set; }
     [Range(0, int.MaxValue, ErrorMessage = "El Precio no puede ser negativo")]
-    public decimal Precio { get; set; }
-
-    [ForeignKey("Entrada")]
-    public virtual Entrada entrada{ get; set; }
-
-    [ForeignKey("Producto")]
-    public virtual Producto producto { get; set; }
+    public decimal Costo { get; set; }
+    public virtual Entrada Entrada{ get; set; }
+    public virtual Producto Producto { get; set; }
 }
 

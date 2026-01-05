@@ -4,6 +4,7 @@ using Gestion_Entrada_Inventario_PA1.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gestion_Entrada_Inventario_PA1.Migrations.ContextoMigrations
 {
     [DbContext(typeof(Contexto))]
-    partial class ContextoModelSnapshot : ModelSnapshot
+    [Migration("20260105011651_PropertyFix")]
+    partial class PropertyFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,7 +62,7 @@ namespace Gestion_Entrada_Inventario_PA1.Migrations.ContextoMigrations
                     b.Property<int>("Cantidad")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Costo")
+                    b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ProductoId")

@@ -63,8 +63,8 @@
 							<InputNumber class="form-control" @bind-Value="cantidad"></InputNumber>
 						</div>
 						<div class="col-3">
-							<label class="form-label">Precio</label>
-							<input type="text" class="form-control" value="@(ListaProducto.FirstOrDefault(c => c.ProductoId == productoIdDetalle)?.Precio.ToString("C") ?? "")"
+							<label class="form-label">Costo</label>
+							<input type="text" class="form-control" value="@(ListaProducto.FirstOrDefault(c => c.ProductoId == productoIdDetalle)?.Costo.ToString("C") ?? "")"
 								   readonly />
 						</div>
 						<div class="col-2 align-self-end">
@@ -80,7 +80,7 @@
 									<tr>
 										<th>Producto</th>
 										<th>Cantidad</th>
-										<th>Precio</th>
+										<th>Costo</th>
 										<th>Importe</th>
 										<th></th>
 									</tr>
@@ -92,8 +92,8 @@
 											<td>@(ListaProducto.FirstOrDefault(t => t.ProductoId == detalle.ProductoId)?.Descripcion ?? "N/A")</td>
 											<td>@detalle.Cantidad</td>
 
-											<td>@detalle.Precio.ToString("C")</td>
-											<td>@((detalle.Cantidad * detalle.Precio).ToString("C"))</td>
+											<td>@detalle.Costo</td>
+											<td>@((detalle.Cantidad * detalle.Costo).ToString("C"))</td>
 											<td>
 												<button type="button" class="btn btn-danger bi bi-trash" @onclick="() => EliminarDetalle(detalle)">Remover</button>
 											</td>
@@ -115,7 +115,7 @@
 			<div class="card-footer text-center">
 
 				<a href="/Inventario/Index" class="btn btn-secondary bi bi-arrow-left">Volver</a>
-				<button type="submit" class="btn btn-primary bi bi-floppy">Guardar</button>
+				<button type="button" class="btn btn-primary bi bi-floppy"@onclick="Guardar">Guardar</button>
 				@if (Id > 0)
 				{
 					<button type="button" class="btn btn-danger bi bi-trash" @onclick="Eliminar">
@@ -158,21 +158,19 @@
 			};
 		}
 	}
-
-
-
-	//Agregar detalle eliminar detalle
-
 	public async Task AgregarComponente()
 	{
+		errorMessage = string.Empty;  
+
 		if (cantidad <= 0)
 		{
-			errorMessage = "Cantidad de ser mayor que 0";
+			errorMessage = "Cantidad debe ser mayor que 0";
 			return;
 		}
+
 		if (productoIdDetalle <= 0)
 		{
-			errorMessage = "Debe Seleccionar un Componente";
+			errorMessage = "Debe seleccionar un producto";
 			return;
 		}
 
@@ -180,20 +178,9 @@
 
 		if (producto == null)
 		{
-			errorMessage = "Producto no enocntrado";
+			errorMessage = "Producto no encontrado";
 			return;
 		}
-
-		var cantidadAgregada = entrada.detalle.Where(d => d.ProductoId == productoIdDetalle).
-		Sum(d => d.Cantidad);
-
-		if (cantidadAgregada + cantidad > producto.Existencia)
-		{
-			errorMessage = $"Inventario insuficiente. Quedan {producto.Existencia} y ya pedidas {cantidadAgregada}";
-			return;
-		}
-
-		//sumar cantidades si se repiten
 		var detalleExistente = entrada.detalle.FirstOrDefault(d => d.ProductoId == productoIdDetalle);
 
 		if (detalleExistente != null)
@@ -206,17 +193,14 @@
 			{
 				Cantidad = cantidad,
 				ProductoId = productoIdDetalle,
-				Precio = precioDetalle
-
+				Costo = producto.Costo
 			};
 			entrada.detalle.Add(nuevoComponente);
 		}
 
 		RecalcularTotales();
 		LimpiarTotales();
-
 	}
-	//guardar//eliminar // recalcular totales // Limpiar totales
 
 	private async Task EliminarDetalle(EntradaDetalle detalle)
 	{
@@ -237,7 +221,7 @@
 
 		if (guardado)
 		{
-			navigationManager.NavigateTo("/Pedido/Index");
+			navigationManager.NavigateTo("/Inventario/Index");
 		}
 		else
 		{
@@ -261,7 +245,7 @@
 	}
 	private async Task RecalcularTotales()
 	{
-		entrada.Total = entrada.detalle?.Sum(d => d.Cantidad * d.Precio)??0;
+		entrada.Total = entrada.detalle?.Sum(d => d.Cantidad * d.Costo)??0;
 
 	}
 

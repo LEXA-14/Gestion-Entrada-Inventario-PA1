@@ -74,12 +74,12 @@
                         {
                             <tr>
                                 <td>@entrada.EntradaId</td>
-                                <th>@entrada.Fecha</th>
+                                <th>@entrada.Fecha.ToString("yyyy-MM-dd")</th>
                                 <td>@entrada.Concepto</td>
 
                                 <th> @entrada.detalle.Sum(d => d.Cantidad)</th>
-                                <th>@entrada.detalle.Average(p => p.Precio)</th>
-                                <th>@entrada.detalle.Sum(i => i.Cantidad * i.Precio)</th>
+                                <th>@entrada.detalle.Average(p => p.Costo)</th>
+                                <th>@entrada.detalle.Sum(i => i.Cantidad * i.Costo)</th>
 
 
 
@@ -97,7 +97,7 @@
             </div>
             <div class="card-footer d-flex justify-content-between">
                 <label>Conteo:@ListaEntrada.Count()</label>
-                <label>Total:@ListaEntrada.Sum(p => p.Cantidad*p.Precio)</label>
+          
 
             </div>
         </div>

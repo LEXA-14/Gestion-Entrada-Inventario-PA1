@@ -15,11 +15,7 @@ public class Entrada
     [Required(ErrorMessage = "Este campo es obligatorio")]
     public DateTime Fecha { get; set; } = DateTime.Now;
     public int Cantidad { get; set; }
-    public decimal Precio { get; set; }
-
     public decimal Total {  get; set; }
-
-    [InverseProperty("Entrada")]
     public ICollection<EntradaDetalle> detalle { get; set; }=new List<EntradaDetalle>();
 
 }

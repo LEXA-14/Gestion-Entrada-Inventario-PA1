@@ -4,6 +4,7 @@ using Gestion_Entrada_Inventario_PA1.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gestion_Entrada_Inventario_PA1.Migrations.ContextoMigrations
 {
     [DbContext(typeof(Contexto))]
-    partial class ContextoModelSnapshot : ModelSnapshot
+    [Migration("20260104195619_Decimal")]
+    partial class Decimal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,6 +43,9 @@ namespace Gestion_Entrada_Inventario_PA1.Migrations.ContextoMigrations
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("Precio")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");
 
@@ -59,8 +65,14 @@ namespace Gestion_Entrada_Inventario_PA1.Migrations.ContextoMigrations
                     b.Property<int>("Cantidad")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Costo")
+                    b.Property<int>("Entrada")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Producto")
+                        .HasColumnType("int");
 
                     b.Property<int>("ProductoId")
                         .HasColumnType("int");
@@ -70,9 +82,9 @@ namespace Gestion_Entrada_Inventario_PA1.Migrations.ContextoMigrations
 
                     b.HasKey("DetalleId");
 
-                    b.HasIndex("ProductoId");
+                    b.HasIndex("Entrada");
 
-                    b.HasIndex("entradaId");
+                    b.HasIndex("Producto");
 
                     b.ToTable("EntradaDetalle");
                 });
@@ -108,21 +120,21 @@ namespace Gestion_Entrada_Inventario_PA1.Migrations.ContextoMigrations
 
             modelBuilder.Entity("Gestion_Entrada_Inventario_PA1.Model.EntradaDetalle", b =>
                 {
-                    b.HasOne("Gestion_Entrada_Inventario_PA1.Model.Producto", "Producto")
+                    b.HasOne("Gestion_Entrada_Inventario_PA1.Model.Entrada", "entrada")
                         .WithMany("detalle")
-                        .HasForeignKey("ProductoId")
+                        .HasForeignKey("Entrada")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Gestion_Entrada_Inventario_PA1.Model.Entrada", "Entrada")
+                    b.HasOne("Gestion_Entrada_Inventario_PA1.Model.Producto", "producto")
                         .WithMany("detalle")
-                        .HasForeignKey("entradaId")
+                        .HasForeignKey("Producto")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Entrada");
+                    b.Navigation("entrada");
 
-                    b.Navigation("Producto");
+                    b.Navigation("producto");
                 });
 
             modelBuilder.Entity("Gestion_Entrada_Inventario_PA1.Model.Entrada", b =>

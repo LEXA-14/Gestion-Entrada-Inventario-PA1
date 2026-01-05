@@ -66,7 +66,6 @@ public class EntradaProductoServices(IDbContextFactory<Contexto> dbFactory)
 
 
     }
-
     private async Task<bool> Insertar(Entrada entrada)
     {
         await using var contexto = await dbFactory.CreateDbContextAsync();
@@ -104,7 +103,7 @@ public class EntradaProductoServices(IDbContextFactory<Contexto> dbFactory)
         await using var contexto = await dbFactory.CreateDbContextAsync();
 
         return await contexto.Entrada.Include(d => d.detalle).
-            ThenInclude(c => c.producto).
+            ThenInclude(c => c.Producto).
             FirstOrDefaultAsync(p => p.EntradaId == id);
     }
 
@@ -115,7 +114,7 @@ public class EntradaProductoServices(IDbContextFactory<Contexto> dbFactory)
         await using var contexto = await dbFactory.CreateDbContextAsync();
 
         return await contexto.Entrada.Include(d => d.detalle).
-            ThenInclude(c => c.producto)
+            ThenInclude(c => c.Producto)
             .Where(criterio)
             .ToListAsync();
     }
