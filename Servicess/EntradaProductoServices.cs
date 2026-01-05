@@ -26,7 +26,7 @@ public class EntradaProductoServices(IDbContextFactory<Contexto> dbFactory)
 
         foreach (var item in detalle)
         {
-            var producto = await contexto.Producto.SingleOrDefaultAsync(c => c.Productoid == item.ProductoId);
+            var producto = await contexto.Producto.SingleOrDefaultAsync(c => c.ProductoId == item.ProductoId);
 
             if (producto != null)
             {
@@ -53,25 +53,24 @@ public class EntradaProductoServices(IDbContextFactory<Contexto> dbFactory)
 
         if (entradaOriginal == null) return false;
 
-        await AfectarEntrada(entradaOriginal.detalle.ToArray(), TipoOperacion.Suma);
+        await AfectarEntrada(entradaOriginal.detalle.ToArray(), TipoOperacion.Resta);
 
-        var detalleAnterior = await contexto.EntradaDetalle.Where(d => d.EntradaId == entrada.EntradaId).ToListAsync();
+        var detalleAnterior = await contexto.EntradaDetalle.Where(d => d.entradaId == entrada.EntradaId).ToListAsync();
 
         contexto.EntradaDetalle.RemoveRange(detalleAnterior);
 
-        await AfectarEntrada(entrada.detalle.ToArray(), TipoOperacion.Resta);
+        await AfectarEntrada(entrada.detalle.ToArray(), TipoOperacion.Suma);
 
         contexto.Update(entrada);
         return await contexto.SaveChangesAsync() > 0;
 
 
     }
-
     private async Task<bool> Insertar(Entrada entrada)
     {
         await using var contexto = await dbFactory.CreateDbContextAsync();
         contexto.Add(entrada);
-        await AfectarEntrada(entrada.detalle.ToArray(), TipoOperacion.Resta);
+        await AfectarEntrada(entrada.detalle.ToArray(), TipoOperacion.Suma);
         return await contexto.SaveChangesAsync() > 0;
     }
     private async Task<bool> Existe(int id)
@@ -90,7 +89,7 @@ public class EntradaProductoServices(IDbContextFactory<Contexto> dbFactory)
 
         if (entrada == null) return false;
 
-        await AfectarEntrada(entrada.detalle.ToArray(), TipoOperacion.Suma);
+        await AfectarEntrada(entrada.detalle.ToArray(), TipoOperacion.Resta);
 
         contexto.EntradaDetalle.RemoveRange(entrada.detalle);
         contexto.Entrada.Remove(entrada);
@@ -104,7 +103,7 @@ public class EntradaProductoServices(IDbContextFactory<Contexto> dbFactory)
         await using var contexto = await dbFactory.CreateDbContextAsync();
 
         return await contexto.Entrada.Include(d => d.detalle).
-            ThenInclude(c => c.producto).
+            ThenInclude(c => c.Producto).
             FirstOrDefaultAsync(p => p.EntradaId == id);
     }
 
@@ -115,7 +114,7 @@ public class EntradaProductoServices(IDbContextFactory<Contexto> dbFactory)
         await using var contexto = await dbFactory.CreateDbContextAsync();
 
         return await contexto.Entrada.Include(d => d.detalle).
-            ThenInclude(c => c.producto)
+            ThenInclude(c => c.Producto)
             .Where(criterio)
             .ToListAsync();
     }

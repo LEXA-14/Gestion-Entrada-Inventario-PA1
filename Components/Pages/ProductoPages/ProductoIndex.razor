@@ -1,0 +1,168 @@
+﻿@page "/Producto/Index"
+@inject ProductoServices productoServices
+@rendermode InteractiveServer
+
+
+
+<PageTitle>Registro de Productos Index</PageTitle>
+<div class="container">
+    <div class="card shadow-lg">
+        <div class="card-header">
+            <div class="d-flex align-items-center">
+                <div class="flex-grow-1 text-start">
+                    <a href="/Producto/Create" class="btn btn-primary">
+                        <span class="bi bi-plus-square"></span> Crear Nuevo Producto
+                    </a>
+                </div>
+                <h5 class="card-title mb-0 text-center">Index</h5>
+                <div class="flex-grow-1 text-end">
+                    <a href="/Inventario/Create" class="btn btn-primary">
+                        <span class="bi bi-plus-square"></span> Registrar Entrada de Productos
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-3">
+                    <label><strong>Desde</strong></label>
+                    <InputDate class="form-control" @bind-Value=desde></InputDate>
+                </div>
+
+                <div class="col-3">
+                    <label><strong>Hasta</strong></label>
+                    <InputDate class="form-control" @bind-Value=hasta></InputDate>
+                </div>
+            </div>
+
+            <div class="row align-items-center">
+                <div class="col-3">
+                    <label class="col-form-label"><strong>Filtrar por</strong></label>
+                    <InputSelect class="form-select" @bind-Value="Filtro">
+                        <option value="" selected disabled>Selecciona una opci&oacute;n</option>
+                        <option value="ID">ID</option>
+                        <option value="Descripcion">Descripcion</option>
+
+
+                    </InputSelect>
+
+                </div>
+                <div class="col-4 offset-5">
+                    <label class="col-form-label"><strong>B&uacute;squeda</strong></label>
+                    <div class="input-group">
+                        <input class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
+                        <button type="button" class="btn btn-outline-primary bi bi-search" @onclick=Buscar></button>
+                    </div>
+
+
+                </div>
+                <table class="table table-hover">
+                    <thead class="table table-striped text-black">
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Descripcion</th>
+                            <th>Existencia</th>
+                            <th>Costo</th>
+                            <th>Precio</th>
+                            
+                          
+                            <th>Opciones</th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var producto in ListaProducto)
+                        {
+                            <tr>
+                                <td>@producto.ProductoId</td>
+                                <th>@producto.Fecha.ToString("yyyy-MM-dd")</th>
+                                <td>@producto.Descripcion</td>
+
+                                <th> @producto.Existencia</th>
+                                <th>@producto.Costo</th>
+                                <th>@producto.Precio</th>
+
+
+
+
+                                <td class="text-center">
+                                    <a href="/Producto/Edit/@producto.ProductoId" class="btn btn-outline-primary bi bi-pencil-square"></a>
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <label>Conteo:@ListaProducto.Count()</label>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+    public Producto producto { get; set; }
+
+    public List<Producto> ListaProducto { get; set; } = new List<Producto>();
+
+    public string Filtro { get; set; }
+    public string ValorFiltro { get; set; }
+
+    public DateTime? desde { get; set; } = null;
+    public DateTime? hasta { get; set; } = null;
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaProducto = await productoServices.Listar(l => true);
+    }
+
+    public async Task Buscar()
+    {
+        var prelista = await productoServices.Listar(l => true);
+
+        if (desde.HasValue && hasta.HasValue)
+        {
+            prelista = prelista.Where(p => p.Fecha >= desde && p.Fecha <= hasta).ToList();
+        }
+
+        if (desde.HasValue && hasta == null)
+        {
+            prelista = prelista.Where(p => p.Fecha <= hasta).ToList();
+        }
+
+
+        if (hasta.HasValue && desde == null)
+        {
+            prelista = prelista.Where(p => p.Fecha <= hasta).ToList();
+        }
+
+        if (!string.IsNullOrWhiteSpace(ValorFiltro))
+        {
+            if (Filtro == "ID" && int.TryParse(ValorFiltro, out int id))
+            {
+
+                prelista = prelista.Where(p => p.ProductoId == id).ToList();
+            }
+
+            if (Filtro == "Descripcion")
+            {
+                prelista = prelista.Where(p => p.Descripcion.ToLower().Contains(ValorFiltro.ToLower())).ToList();
+            }
+        }
+        ListaProducto = prelista;
+    }
+
+}
