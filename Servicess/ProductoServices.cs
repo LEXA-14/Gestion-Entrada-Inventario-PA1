@@ -1,4 +1,5 @@
-﻿using Gestion_Entrada_Inventario_PA1.DAL;
+﻿
+using Gestion_Entrada_Inventario_PA1.Data;
 using Gestion_Entrada_Inventario_PA1.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;

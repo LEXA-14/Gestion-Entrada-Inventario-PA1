@@ -1,5 +1,6 @@
 ﻿@page "/Inventario/Create"
 @page "/Inventario/Edit/{Id:int}"
+@attribute [Authorize]
 @inject EntradaProductoServices entradaService
 @inject NavigationManager navigationManager
 

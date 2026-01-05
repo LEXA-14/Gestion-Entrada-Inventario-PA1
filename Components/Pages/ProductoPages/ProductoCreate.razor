@@ -1,5 +1,6 @@
 ﻿@page "/Producto/Create"
 @page "/Producto/Edit/{id:int}"
+@attribute [Authorize]
 
 @inject ProductoServices productoService
 @inject NavigationManager navigationManager
