@@ -44,6 +44,9 @@
                         <option value="" selected disabled>Selecciona una opci&oacute;n</option>
                         <option value="ID">ID</option>
                         <option value="Descripcion">Descripcion</option>
+                        <option value="Costo">Costo</option>
+                        <option value="Precio">Precio</option>
+                        <option value="Existencia">Existencia</option>
 
 
                     </InputSelect>
@@ -160,6 +163,21 @@
             if (Filtro == "Descripcion")
             {
                 prelista = prelista.Where(p => p.Descripcion.ToLower().Contains(ValorFiltro.ToLower())).ToList();
+            }
+            if (Filtro == "Costo" && int.TryParse(ValorFiltro, out int costo))
+            {
+
+                prelista = prelista.Where(p => p.Costo == costo).ToList();
+            }
+            if (Filtro == "Precio" && int.TryParse(ValorFiltro, out int precio))
+            {
+
+                prelista = prelista.Where(p => p.Precio ==precio).ToList();
+            }
+            if (Filtro == "Existencia" && int.TryParse(ValorFiltro, out int existencia))
+            {
+
+                prelista = prelista.Where(p => p.Existencia == existencia).ToList();
             }
         }
         ListaProducto = prelista;
