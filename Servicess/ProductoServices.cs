@@ -1,6 +1,8 @@
 ﻿using Gestion_Entrada_Inventario_PA1.DAL;
 using Gestion_Entrada_Inventario_PA1.Model;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace Gestion_Entrada_Inventario_PA1.Servicess;
 
@@ -52,11 +54,13 @@ public class ProductoServices(IDbContextFactory<Contexto> dbFactory)
         return await contexto.Producto
             .FirstOrDefaultAsync(c => c.ProductoId == id);
     }
-    public async Task<List<Producto>> Listar()
+  
+    public async Task<List<Producto>> Listar(Expression<Func<Producto, bool>> criterio)
     {
-        using var contexto = await dbFactory.CreateDbContextAsync();
-        return await contexto.Producto
-            .OrderBy(c => c.Descripcion)
+        await using var contexto = await dbFactory.CreateDbContextAsync();
+
+        return await contexto.Producto.Include(d => d.detalle)
+            .Where(criterio)
             .ToListAsync();
     }
 }
