@@ -2,7 +2,7 @@
 @page "/Producto/Edit/{id:int}"
 
 @inject ProductoServices productoService
-@inject NavigationManager Navigation
+@inject NavigationManager navigationManager
 @rendermode InteractiveServer
 
 <PageTitle>@(Id == 0 ? "Nuevo Producto" : "Editar Producto")</PageTitle>
@@ -53,6 +53,10 @@
             <div class="card-footer text-center mt-2">
                 <a href="/Inventario/Index" class="btn btn-secondary"><span class="bi bi-arrow-left"></span>Volver</a>
                 <button type="submit" class="btn btn-primary bi bi-floppy">Guardar</button>
+                @if (Id > 0)
+                {
+                    <button type="button" class=" btn btn-danger bi " @onclick="Eliminar">Eliminar</button>
+                }
             </div>
         </div>
     </div>
@@ -76,16 +80,13 @@
             }
             else
             {
-                Navigation.NavigateTo("/Inventario/Index");
+                navigationManager.NavigateTo("/Inventario/Index");
             }
         }
     }
 
     private async Task Guardar()
     {
-        Console.WriteLine($"ID: {producto.ProductoId}");
-        Console.WriteLine($"Descripcion: {producto.Descripcion}");
-        Console.WriteLine($"Precio: {producto.Precio}");
         try
         {
             if (producto.Costo> producto.Precio)
@@ -103,7 +104,7 @@
             bool resultado = await productoService.Guardar(producto);
             if (resultado)
             {
-                Navigation.NavigateTo("/Inventario/Index");
+                navigationManager.NavigateTo("/Inventario/Index");
             }
             else
             {
@@ -113,6 +114,20 @@
         catch (Exception ex)
         {
             mensaje = $"Ocurrió un error inesperado: {ex.Message}";
+        }
+    }
+
+    private async Task Eliminar()
+    {
+        var eliminado = await productoService.Eliminar(producto.ProductoId);
+
+        if (eliminado)
+        {
+            navigationManager.NavigateTo("/Producto/Index");
+        }
+        else
+        {
+            mensaje = "No se pudo Eliminar correctamente";
         }
     }
 }
