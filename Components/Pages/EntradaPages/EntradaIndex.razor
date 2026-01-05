@@ -40,7 +40,11 @@
                     <InputSelect class="form-select" @bind-Value="Filtro">
                         <option value="" selected disabled>Selecciona una opci&oacute;n</option>
                         <option value="ID">ID</option>
-                        <option value="Persona">Nombre</option>
+                        <option value="Concepto">Concepto</option>
+                        <option value="Cantidad">Cantidad</option>
+                        <option value="Total">Total</option>
+
+
 
 
                     </InputSelect>
@@ -152,9 +156,19 @@
                 prelista = prelista.Where(p => p.EntradaId == id).ToList();
             }
 
-            if (Filtro == "Persona")
+            if (Filtro == "Concepto")
             {
                 prelista = prelista.Where(p => p.Concepto.ToLower().Contains(ValorFiltro.ToLower())).ToList();
+            }
+            if (Filtro == "Cantidad" && int.TryParse(ValorFiltro, out int cantidad))
+            {
+
+                prelista = prelista.Where(p => p.EntradaId == cantidad).ToList();
+            }
+            if (Filtro == "Total" && int.TryParse(ValorFiltro, out int total))
+            {
+
+                prelista = prelista.Where(p => p.EntradaId == total).ToList();
             }
         }
         ListaEntrada = prelista;
