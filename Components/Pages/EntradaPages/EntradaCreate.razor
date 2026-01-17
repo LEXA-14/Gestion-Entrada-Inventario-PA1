@@ -1,5 +1,6 @@
 ﻿@page "/Inventario/Create"
 @page "/Inventario/Edit/{Id:int}"
+@attribute [Authorize]
 @inject EntradaProductoServices entradaService
 @inject NavigationManager navigationManager
 
@@ -115,7 +116,7 @@
 			<div class="card-footer text-center">
 
 				<a href="/Inventario/Index" class="btn btn-secondary bi bi-arrow-left">Volver</a>
-				<button type="button" class="btn btn-primary bi bi-floppy"@onclick="Guardar">Guardar</button>
+				<button type="button" class="btn btn-primary bi bi-floppy" @onclick="Guardar">Guardar</button>
 				@if (Id > 0)
 				{
 					<button type="button" class="btn btn-danger bi bi-trash" @onclick="Eliminar">
@@ -236,7 +237,7 @@
 
 		if (eliminado)
 		{
-			navigationManager.NavigateTo("/Pedido/Index");
+			navigationManager.NavigateTo("/Inventario/Index");
 		}
 		else
 		{

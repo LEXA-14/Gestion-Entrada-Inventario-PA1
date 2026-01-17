@@ -1,4 +1,5 @@
-﻿using Gestion_Entrada_Inventario_PA1.DAL;
+﻿
+using Gestion_Entrada_Inventario_PA1.Data;
 using Gestion_Entrada_Inventario_PA1.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -13,6 +14,11 @@ public class ProductoServices(IDbContextFactory<Contexto> dbFactory)
     {
         if (producto.ProductoId == 0)
         {
+
+            if( await Existe(producto.Descripcion))
+            {
+                return false;
+            }
             producto.Fecha = DateTime.Now;
             return await Insertar(producto);
         }
@@ -21,6 +27,12 @@ public class ProductoServices(IDbContextFactory<Contexto> dbFactory)
             return await Modificar(producto);
         }
 
+    }
+
+    private async Task<bool>Existe(string descripcion)
+    {
+        using var contexto = await dbFactory.CreateDbContextAsync();
+        return await contexto.Producto.AnyAsync(p => p.Descripcion.ToLower() == descripcion.ToLower());
     }
 
     private async Task<bool> Insertar(Producto producto)

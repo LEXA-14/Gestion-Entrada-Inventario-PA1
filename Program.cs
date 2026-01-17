@@ -1,6 +1,6 @@
 using Gestion_Entrada_Inventario_PA1.Components;
 using Gestion_Entrada_Inventario_PA1.Components.Account;
-using Gestion_Entrada_Inventario_PA1.DAL;
+
 using Gestion_Entrada_Inventario_PA1.Data;
 using Gestion_Entrada_Inventario_PA1.Servicess;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -30,12 +30,16 @@ public class Program
             })
             .AddIdentityCookies();
 
+     
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+
+        builder.Services.AddDbContext<Data.Contexto>(options =>
             options.UseSqlServer(connectionString));
 
+        
         builder.Services.AddDbContextFactory<Contexto>(options =>
-    options.UseSqlServer(connectionString));
+            options.UseSqlServer(connectionString),
+            ServiceLifetime.Scoped);
 
         builder.Services.AddScoped<EntradaProductoServices>();
         builder.Services.AddScoped<ProductoServices>();
@@ -43,10 +47,10 @@ public class Program
 
         builder.Services.AddIdentityCore<ApplicationUser>(options =>
             {
-                options.SignIn.RequireConfirmedAccount = true;
+                options.SignIn.RequireConfirmedAccount = false;
                 options.Stores.SchemaVersion = IdentitySchemaVersions.Version3;
             })
-            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddEntityFrameworkStores<Contexto>()
             .AddSignInManager()
             .AddDefaultTokenProviders();
 
