@@ -10,4 +10,15 @@ public class Contexto(DbContextOptions<Contexto> options) : IdentityDbContext<Ap
     public DbSet<Producto> Producto { get; set; }
 
     public DbSet<EntradaDetalle> EntradaDetalle { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<EntradaDetalle>()
+            .HasOne(d => d.Producto)
+            .WithMany(p => p.detalle)
+            .HasForeignKey(d => d.ProductoId)
+            .OnDelete(DeleteBehavior.Cascade);
+    }
 }
