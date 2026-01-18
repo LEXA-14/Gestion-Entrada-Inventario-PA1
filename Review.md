@@ -2,6 +2,6 @@ REVIEW DEL PROGRAMA DE REGISTRO DE ENTRADA DE INVENTARIO
 
 -Leudy Alexa Jaquez Javier 2023-0599
 
-Nombre del Revisador:
+Nombre del Revisador: Gregory Junior 
 Comentarios del Funcionamiento:
-Confirmacion de que la Logica (Guardar,editar y eliminar) funciones: 
+Confirmacion de que la Logica (Guardar,editar y eliminar) funciones: Si Funcionan

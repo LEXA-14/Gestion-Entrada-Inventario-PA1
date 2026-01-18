@@ -34,11 +34,11 @@ public class Program
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
         builder.Services.AddDbContext<Data.Contexto>(options =>
-            options.UseSqlite(connectionString));
+            options.UseSqlServer(connectionString));
 
         
         builder.Services.AddDbContextFactory<Contexto>(options =>
-            options.UseSqlite(connectionString),
+            options.UseSqlServer(connectionString),
             ServiceLifetime.Scoped);
 
         builder.Services.AddScoped<EntradaProductoServices>();
