@@ -52,7 +52,7 @@
             </div>
             
             <div class="card-footer text-center mt-2">
-                <a href="/Inventario/Index" class="btn btn-secondary"><span class="bi bi-arrow-left"></span>Volver</a>
+                <a href="/Producto/Index" class="btn btn-secondary"><span class="bi bi-arrow-left"></span>Volver</a>
                 <button type="submit" class="btn btn-primary bi bi-floppy">Guardar</button>
                 @if (Id > 0)
                 {
@@ -99,6 +99,12 @@
             if (producto.Precio <= 0)
             {
                 mensaje = "Precio no puede ser menor o igual a 0";
+                return;
+            }
+
+            if (await productoService.Existe(producto.Descripcion, producto.ProductoId))
+            {
+                mensaje = "Ya existe un producto con esta descripción";
                 return;
             }
 

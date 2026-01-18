@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Gestion_Entrada_Inventario_PA1.Migrations
 {
     /// <inheritdoc />
-    public partial class Finals : Migration
+    public partial class migre : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
