@@ -29,10 +29,11 @@ public class ProductoServices(IDbContextFactory<Contexto> dbFactory)
 
     }
 
-    private async Task<bool>Existe(string descripcion)
+    public async Task<bool>Existe(string descripcion, int productoId=0)
     {
         using var contexto = await dbFactory.CreateDbContextAsync();
-        return await contexto.Producto.AnyAsync(p => p.Descripcion.ToLower() == descripcion.ToLower());
+        return await contexto.Producto.AnyAsync(p => p.Descripcion.ToLower() == descripcion.ToLower()
+        && p.ProductoId!=productoId);
     }
 
     private async Task<bool> Insertar(Producto producto)

@@ -102,6 +102,12 @@
                 return;
             }
 
+            if (await productoService.Existe(producto.Descripcion, producto.ProductoId))
+            {
+                mensaje = "Ya existe un producto con esta descripción";
+                return;
+            }
+
             bool resultado = await productoService.Guardar(producto);
             if (resultado)
             {
